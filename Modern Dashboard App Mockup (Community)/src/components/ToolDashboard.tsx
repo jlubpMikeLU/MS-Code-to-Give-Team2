@@ -114,7 +114,7 @@ export function ToolDashboard() {
           </div>
         </header>
 
-        <main className="mx-auto max-w-7xl px-6 py-6 md:ml-[var(--sidebar-width)]">
+        <main className="mx-auto max-w-7xl px-6 py-6 md:pl-[var(--sidebar-width)]">
           <div className="grid grid-cols-12 gap-6">
             {/* Stats */}
             <div className="col-span-12 md:col-span-4">

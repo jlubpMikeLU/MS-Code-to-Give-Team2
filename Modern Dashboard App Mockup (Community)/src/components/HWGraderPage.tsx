@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Upload, FileText, Sparkles, Download, Settings2, ChevronRight, RotateCcw, Info, CheckCircle2 } from "lucide-react";
+import { Upload, FileText, Sparkles, Download, Settings2, ChevronRight, RotateCcw, Info, CheckCircle2, User2 } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "./ui/card";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
@@ -8,6 +8,7 @@ import { Input } from "./ui/input";
 // Removed resizable layout on the right workspace for reliability across viewports
 import { Progress } from "./ui/progress";
 import { Badge } from "./ui/badge";
+import { SidebarProvider, Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset } from "./ui/sidebar";
 
 type AIAssessment = {
   instruction: string;
@@ -75,6 +76,8 @@ function formatBytes(bytes: number) {
 }
 
 export function HWGraderPage() {
+  // Public asset path (place incorrect_C.jpeg in `Modern Dashboard App Mockup (Community)/public/`)
+  const demoImageUrl = "/incorrect_C.jpeg";
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [customPrompts, setCustomPrompts] = useState<CustomPrompt[]>([]);
@@ -83,6 +86,7 @@ export function HWGraderPage() {
   const [newPromptName, setNewPromptName] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [aiResult, setAiResult] = useState<AIAssessment | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
 
   const fileInfo = useMemo(() => {
     if (!selectedFile) return null;
@@ -159,7 +163,7 @@ export function HWGraderPage() {
     setAiResult(null);
 
     // Simulate an AI call with a mocked response
-    await new Promise((r) => setTimeout(r, 800));
+    await new Promise((r) => setTimeout(r, 3000));
 
     const mock: AIAssessment = {
       instruction: "Write 5 'C'",
@@ -186,8 +190,65 @@ export function HWGraderPage() {
     }
   }, [selectedFile]);
 
+  // Mock student list for sidebar
+  const students = [
+    "Chun Hei","Tsz Ching","Hoi Lam","Ka Ho","Wing Sze","Man Hei","Hiu Tung","Lok Fung","Chun Kit","Ka Yan",
+    "Yee Ting","Wing Yan","Tsz Lok","Ching Lam","Pui Yan","Ka Wing","Man Lok","Hin Long","Lok Hei","Ka Man",
+  ];
+
+  function handlePickModule1(studentName: string) {
+    setSelectedStudent(studentName);
+    // Minimal demo: set a pseudo file and provide a preview URL to the image placed under /public
+    // @ts-expect-error — using a lightweight pseudo file just for UI display
+    const pseudoFile: File = { name: `${studentName}-module1.jpeg`, size: 1024, type: "image/jpeg" };
+    setSelectedFile(pseudoFile as unknown as File);
+    // expose preview URL for the preview section
+    // @ts-ignore
+    window.__demoPreviewUrl = demoImageUrl;
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <SidebarProvider>
+      <Sidebar className="border-r">
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <div className="p-2 text-xs font-semibold tracking-wide text-white/80">Active Students</div>
+                </SidebarMenuItem>
+                {students.map((name) => (
+                  <SidebarMenuItem key={name}>
+                    <div className="px-2">
+                      <SidebarMenuButton size="lg" onClick={() => { setSelectedStudent(name); setSelectedFile(null); setAiResult(null); (window as any).__demoPreviewUrl = ""; }}>
+                        <User2 />
+                        <span>{name}</span>
+                      </SidebarMenuButton>
+                      {selectedStudent === name && (
+                        <div className="mt-2 ml-8 space-y-2 text-sm">
+                          <button className="text-left text-white/90 hover:underline inline-flex items-center gap-2" onClick={() => { setSelectedStudent(null); setSelectedFile(null); setAiResult(null); (window as any).__demoPreviewUrl = ""; }}>
+                            <span className="rounded bg-white/10 px-2 py-0.5 text-[11px] leading-none">Back</span>
+                            <span className="opacity-90">to students</span>
+                          </button>
+                          <button className="text-left text-white hover:underline block" onClick={() => handlePickModule1(name)}>
+                            Writing Alphabet - Module 1
+                          </button>
+                          <div className="pointer-events-none select-none text-white/50">Tracing Alphabet - Module 2</div>
+                          <div className="pointer-events-none select-none text-white/50">Matching Animals to word - Module 3</div>
+                          <div className="pointer-events-none select-none text-white/50">Circling the right word - Module 4</div>
+                        </div>
+                      )}
+                    </div>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+      </Sidebar>
+
+      <SidebarInset>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 md:pl-[var(--sidebar-width)]">
       <header className="border-b bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-10">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
@@ -201,14 +262,19 @@ export function HWGraderPage() {
         </div>
       </header>
 
-      <main className="mx-auto grid max-w-7xl grid-cols-12 gap-6 px-6 py-6">
+      <main className="relative mx-auto grid max-w-7xl grid-cols-12 gap-6 px-6 py-6">
+        {isSubmitting && (
+          <div className="absolute inset-0 z-30 flex items-center justify-center bg-white/60 backdrop-blur-sm">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary/30 border-t-primary" />
+          </div>
+        )}
         {/* Left Column: Upload + Prompt (Static) */}
         <section className="col-span-7 flex flex-col gap-6">
           {/* Upload Card */}
           <Card>
                 <CardHeader className="border-b">
                   <CardTitle className="text-lg">Submission</CardTitle>
-                  <CardDescription>Upload a document to grade (PDF or DOCX)</CardDescription>
+                  <CardDescription>Upload a document to grade (PDF or DOCX). {selectedStudent ? `Auto-uploaded for ${selectedStudent}.` : null}</CardDescription>
                 </CardHeader>
                 <CardContent className="py-6">
                   <div
@@ -225,7 +291,7 @@ export function HWGraderPage() {
                     <input
                       ref={fileInputRef}
                       type="file"
-                      accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                      accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*"
                       className="hidden"
                       onChange={(e) => handleFileChange(e.currentTarget.files?.[0] ?? null)}
                     />
@@ -338,8 +404,12 @@ export function HWGraderPage() {
                   {!selectedFile ? (
                     <div className="text-sm text-muted-foreground">Upload a document to see a quick preview.</div>
                   ) : (
-                    <div className="h-[320px] w-full max-w-3xl rounded-lg border bg-[linear-gradient(120deg,#fafafa,#f5f5f5)] p-6 text-sm text-muted-foreground">
-                      A lightweight preview will appear here. For full fidelity, open the file in your viewer.
+                    <div className="w-full max-w-3xl">
+                      <img
+                        src={(window as any).__demoPreviewUrl || demoImageUrl}
+                        alt="Submission preview"
+                        className="h-[320px] w-full rounded-lg border object-contain bg-white"
+                      />
                     </div>
                   )}
                 </div>
@@ -430,6 +500,8 @@ export function HWGraderPage() {
         </section>
       </main>
     </div>
+    </SidebarInset>
+    </SidebarProvider>
   );
 }
 

@@ -161,7 +161,7 @@ export function VideoCheckerPage() {
         </div>
       </header>
 
-      <main className="mx-auto grid max-w-7xl grid-cols-12 gap-6 px-6 py-6">
+      <main className="mx-auto grid max-w-7xl grid-cols-12 gap-6 px-6 py-6 md:pl-[var(--sidebar-width)]">
         {/* Left Column: Upload + Prompt */}
         <section className="col-span-7 flex flex-col gap-6">
           {/* Upload Card */}
