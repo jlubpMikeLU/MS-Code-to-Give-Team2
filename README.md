@@ -55,6 +55,7 @@ This is an AI-powered pronunciation training application that helps users improv
     ```bash
     pip install -r requirements.txt
     ```
+<img width="2879" height="1702" alt="image" src="https://github.com/user-attachments/assets/e02a0291-e04e-4484-886f-569bb78b60cb" />
 
 -----
 
@@ -87,3 +88,7 @@ The application starts on a homework list page. Click the **"Submit Audio"** but
       * The application will display a score and highlight words you pronounced well or poorly.
   * **Text Input:** The text field will be pre-filled with the homework title you selected.
   * **Play Sample Audio:** Click the play button to hear a machine-generated pronunciation of the sentence for reference.
+<img width="2865" height="1611" alt="image" src="https://github.com/user-attachments/assets/60189563-41cb-4acb-b579-dcb42aacf193" />
+
+<img width="2872" height="1610" alt="image" src="https://github.com/user-attachments/assets/0d15515f-d969-4860-b56a-83769da3716a" />
+
