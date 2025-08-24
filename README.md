@@ -23,7 +23,6 @@ This is an AI-powered pronunciation training application that helps users improv
   * An internet connection to download necessary libraries and models.
 
 #### Installation
-<img width="2876" height="1699" alt="image" src="https://github.com/user-attachments/assets/dfc5a0c7-4443-4adb-aa53-54db4b565c55" />
 
 1.  **Clone the Repository**:
 
@@ -57,6 +56,8 @@ This is an AI-powered pronunciation training application that helps users improv
     pip install -r requirements.txt
     ```
 
+<img width="2876" height="1699" alt="image" src="https://github.com/user-attachments/assets/dfc5a0c7-4443-4adb-aa53-54db4b565c55" />
+
 ### Running the Application
 
 1.  Make sure your virtual environment is activated.
@@ -71,13 +72,13 @@ This is an AI-powered pronunciation training application that helps users improv
 ### Usage
 
 #### Homework List
-<img width="2856" height="1605" alt="image" src="https://github.com/user-attachments/assets/a8754c83-790c-44b4-87ca-5219901666f3" />
   * The application starts on a homework list page.
   * Click the **"Submit Audio"** button next to a homework title to be taken to the pronunciation assessment page.
+<img width="2856" height="1605" alt="image" src="https://github.com/user-attachments/assets/a8754c83-790c-44b4-87ca-5219901666f3" />
+
 
 
 #### Main Pronunciation Page
-<img width="2869" height="1617" alt="image" src="https://github.com/user-attachments/assets/3d36c63e-6d04-4a16-b48d-27d5e61a835b" />
   * **Select Language**: Use the dropdown menu to choose between English or German.
   * **Pronunciation Assessment**:
       * Click the microphone button to start recording your voice.
@@ -86,6 +87,7 @@ This is an AI-powered pronunciation training application that helps users improv
   * **Text Input**: The text field will be pre-filled with the homework title you selected.
   * **Play Sample Audio**: Click the play button to hear a machine-generated pronunciation of the sentence for reference.
   * **Upload Video**: Click the **"Upload Video"** link to upload a video file. The application will extract the audio and perform a pronunciation check on the extracted audio.
+<img width="2869" height="1617" alt="image" src="https://github.com/user-attachments/assets/3d36c63e-6d04-4a16-b48d-27d5e61a835b" />
 
 -----
 
