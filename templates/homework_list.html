@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homework List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Select a Homework Assignment</h1>
+        <div class="list-group">
+            {% for homework in homeworks %}
+            <div class="list-group-item">
+                <h5>{{ homework.title }}</h5>
+                <a href="{{ url_for('launch_assessment', title=homework.title) }}" class="btn btn-primary">Submit Audio</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
