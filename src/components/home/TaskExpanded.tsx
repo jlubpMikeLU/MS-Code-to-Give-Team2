@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { Button } from '../ui/button'
 import { Bot } from 'lucide-react'
 
@@ -13,16 +13,33 @@ export interface TaskExpandedProps {
   fridayTwoButtons?: boolean
   recognitionBadges?: string[]
   startOnly?: boolean
+  onStart?: () => void
+  onUpload?: (file: File) => void
 }
 
-export default function TaskExpanded({ showCheckSubmission, showViewHomework, scoreText, aiText, reachText, showChat, showResubmit, fridayTwoButtons, recognitionBadges, startOnly }: TaskExpandedProps) {
+export default function TaskExpanded({ showCheckSubmission, showViewHomework, scoreText, aiText, reachText, showChat, showResubmit, fridayTwoButtons, recognitionBadges, startOnly, onStart, onUpload }: TaskExpandedProps) {
+  const fileRef = useRef<HTMLInputElement>(null)
+  const handleStart = () => {
+    if (onUpload && fileRef.current) {
+      fileRef.current.click()
+    } else if (onStart) {
+      onStart()
+    }
+  }
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0]
+    if (f && onUpload) onUpload(f)
+  }
   if (fridayTwoButtons) {
     return (
       <div className="space-y-3">
         <div className="flex gap-2">
           <Button variant="outline" className="flex-1">View</Button>
-          <Button className="flex-1">Start your homework!</Button>
+          <Button className="flex-1" onClick={handleStart}>Start your homework!</Button>
         </div>
+        {onUpload && (
+          <input ref={fileRef} onChange={handleFileChange} type="file" accept="image/*" className="hidden" />
+        )}
       </div>
     )
   }
@@ -30,7 +47,10 @@ export default function TaskExpanded({ showCheckSubmission, showViewHomework, sc
   if (startOnly) {
     return (
       <div className="space-y-3">
-        <Button className="w-full">Start your homework!</Button>
+        <Button className="w-full" onClick={handleStart}>Start your homework!</Button>
+        {onUpload && (
+          <input ref={fileRef} onChange={handleFileChange} type="file" accept="image/*" className="hidden" />
+        )}
       </div>
     )
   }
