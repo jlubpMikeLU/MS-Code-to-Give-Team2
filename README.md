@@ -78,7 +78,6 @@ This is an AI-powered pronunciation training application that helps users improv
 
 #### Main Pronunciation Page
 <img width="2869" height="1617" alt="image" src="https://github.com/user-attachments/assets/3d36c63e-6d04-4a16-b48d-27d5e61a835b" />
-
   * **Select Language**: Use the dropdown menu to choose between English or German.
   * **Pronunciation Assessment**:
       * Click the microphone button to start recording your voice.
