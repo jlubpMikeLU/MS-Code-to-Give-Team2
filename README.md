@@ -73,8 +73,10 @@ This is an AI-powered pronunciation training application that helps users improv
 
   * The application starts on a homework list page.
   * Click the **"Submit Audio"** button next to a homework title to be taken to the pronunciation assessment page.
+<img width="2856" height="1605" alt="image" src="https://github.com/user-attachments/assets/a8754c83-790c-44b4-87ca-5219901666f3" />
 
 #### Main Pronunciation Page
+<img width="2869" height="1617" alt="image" src="https://github.com/user-attachments/assets/3d36c63e-6d04-4a16-b48d-27d5e61a835b" />
 
   * **Select Language**: Use the dropdown menu to choose between English or German.
   * **Pronunciation Assessment**:
