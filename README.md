@@ -90,5 +90,6 @@ The application starts on a homework list page. Click the **"Submit Audio"** but
   * **Play Sample Audio:** Click the play button to hear a machine-generated pronunciation of the sentence for reference.
 <img width="2865" height="1611" alt="image" src="https://github.com/user-attachments/assets/60189563-41cb-4acb-b579-dcb42aacf193" />
 
-<img width="2872" height="1610" alt="image" src="https://github.com/user-attachments/assets/0d15515f-d969-4860-b56a-83769da3716a" />
+<img width="2863" height="1621" alt="image" src="https://github.com/user-attachments/assets/579624e9-5253-44e5-8065-e529d0eacd21" />
+
 
