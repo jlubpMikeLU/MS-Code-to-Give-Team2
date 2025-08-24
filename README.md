@@ -1,5 +1,3 @@
-To rewrite the `README.md` while keeping everything the same except for the CSV and video upload parts, you just need to remove the two sections that mention those features. I've updated the document for you, focusing the content on the core audio-based functionality.
-
 -----
 
 ### AI Pronunciation Trainer
