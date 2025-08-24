@@ -31,6 +31,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     setTimeout(postHeight, 300);
     setTimeout(postHeight, 1000);
     setTimeout(postHeight, 2000);
+
+    // Respond to parent handshake
+    window.addEventListener('message', (evt) => {
+        try {
+            if (evt?.data?.type === 'REQUEST_NGO_HEIGHT') {
+                postHeight();
+            }
+        } catch {}
+    });
 });
 
 async function initializeDashboard() {
@@ -47,7 +56,10 @@ async function initializeDashboard() {
         // Render components
         renderStudentsTable();
         renderInsights();
-        renderHomeworkGrid();
+        // Homework grid removed in embedded build; keep safe-guard
+        if (document.getElementById('homeworkGrid')) {
+            renderHomeworkGrid();
+        }
         
         // Setup event listeners
         setupEventListeners();

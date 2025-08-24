@@ -82,6 +82,10 @@ export function ToolDashboard() {
       setNgoHeight(clamped);
     }
     window.addEventListener("message", handleMessage);
+    // Ask child for height immediately in case it loaded before listener
+    try {
+      iframeRef.current?.contentWindow?.postMessage({ type: "REQUEST_NGO_HEIGHT" }, "*");
+    } catch {}
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 

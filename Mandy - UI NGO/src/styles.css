@@ -442,9 +442,10 @@ body {
 }
 
 .homework-scroll-container {
-    max-height: 600px; /* Set maximum height */
-    overflow-y: auto; /* Enable vertical scrolling */
-    padding-right: 10px; /* Space for scrollbar */
+    /* Let content expand naturally inside our host app (no internal scrolling) */
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
     gap: 1.5rem;
