@@ -61,10 +61,10 @@ export function StudentAnalytics({ student }: StudentAnalyticsProps) {
     },
     {
       rank: 3,
-      name: 'Emma',
+      name: 'Chun Hei',
       points: 285,
       streak: 5,
-      avatarKey: 'emma',
+      avatarKey: 'ch',
       isCurrentUser: true
     },
     {

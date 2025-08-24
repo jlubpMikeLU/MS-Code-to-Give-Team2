@@ -14,6 +14,8 @@ export interface TaskItemProps {
   rightIcon: 'check'|'clock'
   expanded?: boolean
   hideStatusChip?: boolean
+  pointsLabel?: string
+  onStatusClick?: () => void
 }
 
 const mediaIconFor: Record<TaskMedia, any> = {
@@ -23,14 +25,19 @@ const mediaIconFor: Record<TaskMedia, any> = {
   video: Video,
 }
 
-export default function TaskItem({ day, media, title, points, status, rightIcon, hideStatusChip }: TaskItemProps) {
+export default function TaskItem({ day, media, title, points, status, rightIcon, hideStatusChip, pointsLabel, onStatusClick }: TaskItemProps) {
   const MediaIcon = mediaIconFor[media]
-  const statusChip = (
+  const chip = (
     status === 'reviewed' ? <Badge variant="secondary" className="text-xs bg-green-100 text-green-800">reviewed</Badge>
     : status === 'completed' ? <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-800">completed</Badge>
     : status === 'pending' ? <Badge variant="secondary" className="text-xs bg-yellow-100 text-yellow-800">pending</Badge>
     : <Badge variant="secondary" className="text-xs bg-gray-100 text-gray-800">to-do</Badge>
   )
+  const handleStatusClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    onStatusClick?.()
+  }
   return (
     <div className="flex items-center w-full">
       <div className="flex items-center gap-3 min-w-0">
@@ -39,15 +46,25 @@ export default function TaskItem({ day, media, title, points, status, rightIcon,
           <div className="font-medium truncate hover:no-underline select-none">{title}</div>
           <div className="text-sm text-muted-foreground flex items-center gap-4">
             <span>{day}</span>
-            {points > 0 && (
-              <span className="flex items-center gap-1"><Star className="h-3 w-3 text-yellow-500" />{points}</span>
+            {pointsLabel ? (
+              <span className="flex items-center gap-1"><Star className="h-3 w-3 text-yellow-500" />{pointsLabel}</span>
+            ) : (
+              points > 0 && (
+                <span className="flex items-center gap-1"><Star className="h-3 w-3 text-yellow-500" />{points}</span>
+              )
             )}
           </div>
         </div>
       </div>
       <div className="ml-auto flex items-center gap-2 shrink-0">
-        {!hideStatusChip && statusChip}
-        {rightIcon === 'check' && <CheckCircle className="h-5 w-5 text-green-500" />}
+        {!hideStatusChip && (
+          onStatusClick ? (
+            <button type="button" onClick={handleStatusClick} className="outline-hidden">
+              {chip}
+            </button>
+          ) : chip
+        )}
+        {rightIcon === 'check' && <CheckCircle className={`h-5 w-5 ${status === 'completed' ? 'text-blue-600' : 'text-green-500'}`} />}
         {rightIcon === 'clock' && <Clock className="h-5 w-5 text-gray-500" />}
       </div>
     </div>

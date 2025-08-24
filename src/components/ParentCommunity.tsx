@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
@@ -71,7 +71,7 @@ export function ParentCommunity() {
       author: 'Maria C.',
       authorRole: 'parent',
       avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
-      content: 'Huge win today! Emma read an entire book in English on her own. Six months ago she was struggling with single words. The REACH program is amazing! 🎉📖',
+      content: 'Huge win today! Chun Hei read an entire book in English on his own. Six months ago he was struggling with single words. The REACH program is amazing! 🎉📖',
       type: 'success',
       timestamp: '6 hours ago',
       likes: 31,

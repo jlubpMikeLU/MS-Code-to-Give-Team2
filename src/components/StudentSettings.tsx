@@ -64,7 +64,7 @@ export function StudentSettings({ student }: StudentSettingsProps) {
           <div className="flex items-center gap-4 mb-4">
             <Avatar className="h-16 w-16">
               <AvatarImage 
-                src="/Emma.png" 
+                src="/CH.png" 
                 alt={student.name}
               />
               <AvatarFallback>

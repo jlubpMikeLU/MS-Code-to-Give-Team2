@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { Button } from '../ui/button'
-import { Bot } from 'lucide-react'
+import { Bot, Star } from 'lucide-react'
 
 export interface TaskExpandedProps {
   showCheckSubmission?: boolean
@@ -8,6 +8,7 @@ export interface TaskExpandedProps {
   scoreText?: string // e.g., "15 · Top 3% of all submissions!"
   aiText?: string
   reachText?: string
+  aiLoading?: boolean
   showChat?: boolean
   showResubmit?: boolean
   fridayTwoButtons?: boolean
@@ -15,9 +16,10 @@ export interface TaskExpandedProps {
   startOnly?: boolean
   onStart?: () => void
   onUpload?: (file: File) => void
+  onCheckSubmission?: () => void
 }
 
-export default function TaskExpanded({ showCheckSubmission, showViewHomework, scoreText, aiText, reachText, showChat, showResubmit, fridayTwoButtons, recognitionBadges, startOnly, onStart, onUpload }: TaskExpandedProps) {
+export default function TaskExpanded({ showCheckSubmission, showViewHomework, scoreText, aiText, reachText, aiLoading, showChat, showResubmit, fridayTwoButtons, recognitionBadges, startOnly, onStart, onUpload, onCheckSubmission }: TaskExpandedProps) {
   const fileRef = useRef<HTMLInputElement>(null)
   const handleStart = () => {
     if (onUpload && fileRef.current) {
@@ -58,7 +60,7 @@ export default function TaskExpanded({ showCheckSubmission, showViewHomework, sc
   return (
     <div className="space-y-3">
       {showViewHomework && <Button variant="outline" className="w-full">View homework</Button>}
-      {showCheckSubmission && <Button variant="outline" className="w-full">Check the submission</Button>}
+      {showCheckSubmission && <Button variant="outline" className="w-full" onClick={onCheckSubmission}>Check the submission</Button>}
       {recognitionBadges && recognitionBadges.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {recognitionBadges.map((b, i) => (
@@ -66,9 +68,22 @@ export default function TaskExpanded({ showCheckSubmission, showViewHomework, sc
           ))}
         </div>
       )}
-      {scoreText && <div className="text-sm"><span className="font-medium">{scoreText}</span></div>}
-      {(aiText || reachText) && (
+      {scoreText && (
+        <div className="text-sm flex items-center gap-1">
+          <Star className="h-3 w-3 text-yellow-500" />
+          <span className="font-medium">{scoreText}</span>
+        </div>
+      )}
+      {(aiLoading || aiText || reachText) && (
         <div className="space-y-2">
+          {aiLoading && (
+            <div className="flex items-start gap-2">
+              <div className="p-2 bg-blue-50 rounded-full"><Bot className="h-4 w-4 text-blue-600" /></div>
+              <div className="bg-muted rounded-2xl p-3 text-sm flex-1 animate-pulse">
+                Analyzing submission…
+              </div>
+            </div>
+          )}
           {aiText && (
             <div className="flex items-start gap-2">
               <div className="p-2 bg-blue-50 rounded-full"><Bot className="h-4 w-4 text-blue-600" /></div>

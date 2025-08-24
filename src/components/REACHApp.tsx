@@ -48,7 +48,7 @@ export function REACHApp() {
   ];
 
   const currentStudent = {
-    name: 'Emma',
+    name: 'Chun Hei',
     grade: 'K3 Student',
     points: 285,
     streak: 5,
@@ -70,7 +70,7 @@ export function REACHApp() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-background relative">
+    <div className="flex flex-col h-full min-h-0 bg-background relative">
       {/* Status Bar Space */}
       <div className="h-11 bg-background"></div>
       
@@ -91,7 +91,7 @@ export function REACHApp() {
       )}
 
       {/* Content Area */}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 min-h-0 overflow-y-auto">
         {activeTab === 'home' && (
           <div>
             {/* Home Header */}
@@ -104,7 +104,7 @@ export function REACHApp() {
                       {/* Profile Photo */}
                       <Avatar className="h-12 w-12">
                         <AvatarImage 
-                          src="/Emma.png" 
+                          src="/CH.png" 
                           alt={`${currentStudent.name}'s profile`}
                           className="object-cover"
                         />
@@ -183,7 +183,7 @@ export function REACHApp() {
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="bg-blue-50 border-t px-4 py-2 pb-6 flex justify-around" aria-label="Bottom Navigation">
+      <nav className="sticky bottom-0 left-0 right-0 bg-blue-50 border-t px-4 py-2 pb-[calc(env(safe-area-inset-bottom)+0.5rem)] flex justify-around" aria-label="Bottom Navigation">
         {navigationItems.map((item) => {
           const Icon = item.icon;
           return (

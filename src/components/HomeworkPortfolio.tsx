@@ -54,9 +54,12 @@ export function HomeworkPortfolio({ student }: HomeworkPortfolioProps) {
   const [selectedWeek, setSelectedWeek] = useState(8);
   const [showPointRead, setShowPointRead] = useState(false);
   const [uploadMessage, setUploadMessage] = useState<string | null>(null)
+  const [submissionPreviewUrl, setSubmissionPreviewUrl] = useState<string | null>(null)
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false)
+  const [isThursdayLoading, setIsThursdayLoading] = useState(false)
 
   // Reordered and updated per requirement
-  const submissions: Submission[] = [
+  const initialSubmissions: Submission[] = [
     {
       id: 'tue',
       day: 'Monday',
@@ -66,7 +69,7 @@ export function HomeworkPortfolio({ student }: HomeworkPortfolioProps) {
       status: 'reviewed',
       feedbackAI: 'Smooth tracing lines! Watch for the curves on letters like “s”.',
       feedbackReach: 'Nice pencil control. Next time, slow down on corners.',
-      points: 20
+      points: 8
     },
     {
       id: 'thu',
@@ -77,7 +80,7 @@ export function HomeworkPortfolio({ student }: HomeworkPortfolioProps) {
       status: 'reviewed',
       feedbackAI: 'Lovely colors and careful filling! Try staying within the lines.',
       feedbackReach: 'Reviewed and graded. Great effort!',
-      points: 25
+      points: 10
     },
     {
       id: 'mon',
@@ -108,6 +111,8 @@ export function HomeworkPortfolio({ student }: HomeworkPortfolioProps) {
     }
   ];
 
+  const [submissions, setSubmissions] = useState<Submission[]>(initialSubmissions)
+
   const doneCount = submissions.filter(s => s.status === 'reviewed' || s.status === 'completed').length;
   const totalCount = submissions.length;
   const remainingCount = totalCount - doneCount;
@@ -135,8 +140,43 @@ export function HomeworkPortfolio({ student }: HomeworkPortfolioProps) {
   };
 
   const handleFakeUpload = (file: File) => {
-    setUploadMessage(`Selected file: ${file.name} (${Math.round(file.size/1024)} KB)`)
-    setTimeout(() => setUploadMessage(null), 4000)
+    setUploadMessage(`Selected file: ${file.name} (${Math.round(file.size/1024)} KB)`) 
+    // Create an object URL for preview
+    const url = URL.createObjectURL(file)
+    setSubmissionPreviewUrl(url)
+    // Immediately mark Thursday (id = 'wed') as completed with pending points; defer AI feedback for 3s
+    setIsThursdayLoading(true)
+    setSubmissions(prev => prev.map(s => s.id === 'wed' ? {
+      ...s,
+      status: 'completed',
+      points: 0,
+      feedbackAI: undefined,
+      feedbackReach: undefined,
+    } : s))
+    // After 3 seconds, set the real bot reply
+    setTimeout(() => {
+      setSubmissions(prev => prev.map(s => s.id === 'wed' ? {
+        ...s,
+        feedbackAI: "Great job trying to write the letter 'C'! You got 3 out of 5 correct. Keep practicing, and you'll get better at writing 'C'!",
+      } : s))
+      setUploadMessage(null)
+      setIsThursdayLoading(false)
+    }, 4000)
+  }
+
+  const openPreview = () => {
+    if (submissionPreviewUrl) setIsPreviewOpen(true)
+  }
+
+  const closePreview = () => setIsPreviewOpen(false)
+
+  const markThursdayReviewed = () => {
+    setSubmissions(prev => prev.map(s => s.id === 'wed' ? {
+      ...s,
+      status: 'reviewed',
+      points: 3,
+      feedbackReach: "You have improved so much. Keep up the good work!",
+    } : s))
   }
 
   return (
@@ -201,6 +241,8 @@ export function HomeworkPortfolio({ student }: HomeworkPortfolioProps) {
                             title={s.title}
                             points={s.points}
                             status={s.status === 'todo' ? 'to-do' : (s.status as any)}
+                            pointsLabel={s.id === 'wed' && s.status === 'completed' ? 'pending...' : undefined}
+                            onStatusClick={s.id === 'wed' && s.status === 'completed' ? markThursdayReviewed : undefined}
                             rightIcon={rightIcon as any}
                           />
                           {/* Chevron is hidden by AccordionTrigger override */}
@@ -210,7 +252,7 @@ export function HomeworkPortfolio({ student }: HomeworkPortfolioProps) {
                             <TaskExpanded
                               showViewHomework
                               showCheckSubmission
-                              scoreText={"20 · Nice work!"}
+                              scoreText={undefined}
                               aiText={s.feedbackAI}
                               reachText={s.feedbackReach}
                               showChat
@@ -222,7 +264,7 @@ export function HomeworkPortfolio({ student }: HomeworkPortfolioProps) {
                             <TaskExpanded
                               showViewHomework
                               showCheckSubmission
-                              scoreText={"25 · Great coloring!"}
+                              scoreText={undefined}
                               aiText={s.feedbackAI}
                               reachText={s.feedbackReach}
                               showChat
@@ -235,7 +277,28 @@ export function HomeworkPortfolio({ student }: HomeworkPortfolioProps) {
                           )}
 
                           {s.id === 'wed' && (
-                            <TaskExpanded fridayTwoButtons onUpload={handleFakeUpload} />
+                            s.status === 'completed' ? (
+                              <TaskExpanded
+                                showViewHomework
+                                showCheckSubmission
+                                aiText={s.feedbackAI}
+                                aiLoading={isThursdayLoading}
+                                showChat
+                                showResubmit
+                                onCheckSubmission={openPreview}
+                              />
+                            ) : (
+                              <TaskExpanded
+                                fridayTwoButtons={s.status === 'todo'}
+                                showViewHomework={s.status === 'reviewed'}
+                                showCheckSubmission={s.status === 'reviewed'}
+                                aiText={s.feedbackAI}
+                                reachText={s.feedbackReach}
+                                showChat={s.status === 'reviewed'}
+                                showResubmit={s.status === 'reviewed'}
+                                onUpload={s.status === 'todo' ? handleFakeUpload : undefined}
+                              />
+                            )
                           )}
 
                           {s.id === 'fri' && (
@@ -270,6 +333,18 @@ export function HomeworkPortfolio({ student }: HomeworkPortfolioProps) {
       {showPointRead && (
         <div className="absolute inset-0 z-40">
           <PointReadTask onClose={() => setShowPointRead(false)} />
+        </div>
+      )}
+
+      {/* Simple Preview Modal */}
+      {isPreviewOpen && submissionPreviewUrl && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={closePreview}>
+          <div className="bg-white rounded-lg overflow-hidden max-w-[90vw] max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
+            <img src={submissionPreviewUrl} alt="Submission preview" className="max-w-[90vw] max-h-[80vh] object-contain" />
+            <div className="p-2 text-right">
+              <Button variant="outline" onClick={closePreview}>Close</Button>
+            </div>
+          </div>
         </div>
       )}
     </div>
