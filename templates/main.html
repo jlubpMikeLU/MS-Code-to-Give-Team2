@@ -32,6 +32,11 @@
             <h1 id='main_title'> AI Pronunciation Trainer </h1>
         </div>
 
+        <a href="#" class="upload-link" onclick="document.getElementById('video-upload').click(); return false;">Upload Video</a>
+        <input type="hidden" id="homework-title-input" value="{{ homework_title or '' }}">
+        <input type="file" id="video-upload" style="display: none;" accept="video/mp4,video/avi" onchange="handleVideoUpload(this.files[0])">
+
+
         <div class="expanded">
             <div class="horizontal-flexbox" style="display:flex; flex-direction: row;">
 
