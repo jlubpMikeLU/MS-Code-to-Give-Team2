@@ -87,6 +87,9 @@ export function HWGraderPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [aiResult, setAiResult] = useState<AIAssessment | null>(null);
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
+  const [teacherScore, setTeacherScore] = useState<number | null>(null);
+  const [teacherFeedback, setTeacherFeedback] = useState<string>("");
+  const [isPublishing, setIsPublishing] = useState(false);
 
   const fileInfo = useMemo(() => {
     if (!selectedFile) return null;
@@ -180,6 +183,8 @@ export function HWGraderPage() {
   function handleReset() {
     setSelectedFile(null);
     setAiResult(null);
+    setTeacherScore(null);
+    setTeacherFeedback("");
     const txt = getPresetTextById(selectedPresetId) ?? BUILTIN_PRESETS[0].text;
     setPrompt(txt);
   }
@@ -189,6 +194,13 @@ export function HWGraderPage() {
       void handleGrade();
     }
   }, [selectedFile]);
+
+  useEffect(() => {
+    if (aiResult) {
+      setTeacherScore(aiResult.score);
+      setTeacherFeedback("");
+    }
+  }, [aiResult]);
 
   // Mock student list for sidebar
   const students = [
@@ -463,11 +475,25 @@ export function HWGraderPage() {
                         <div className="rounded-lg border p-4">
                           <div className="text-xs uppercase text-muted-foreground">Score</div>
                           <div className="mt-3 flex items-end gap-3">
-                            <div className="text-4xl font-semibold">{aiResult.score}</div>
+                            <div className="text-4xl font-semibold">{(teacherScore ?? aiResult.score)}</div>
                             <div className="pb-1 text-muted-foreground">/ 5</div>
                           </div>
                           <div className="mt-4">
-                            <Progress value={(aiResult.score / 5) * 100} />
+                            <Progress value={(((teacherScore ?? aiResult.score) / 5) * 100)} />
+                          </div>
+                          <div className="mt-4 flex items-center gap-2">
+                            <span className="text-xs text-muted-foreground">Override</span>
+                            <Input
+                              type="number"
+                              min={0}
+                              max={5}
+                              value={teacherScore ?? aiResult.score}
+                              onChange={(e) => {
+                                const v = Math.max(0, Math.min(5, Number(e.target.value)));
+                                setTeacherScore(Number.isNaN(v) ? 0 : v);
+                              }}
+                              className="w-20"
+                            />
                           </div>
                         </div>
                       </div>
@@ -488,6 +514,32 @@ export function HWGraderPage() {
                           </div>
                           <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
                             <Info className="h-3.5 w-3.5" /> These fields help validate the AI understood the homework correctly.
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="col-span-12">
+                        <div className="rounded-lg border p-4">
+                          <div className="text-xs uppercase text-muted-foreground">Teacher's (NGO) feedback</div>
+                          <div className="mt-3">
+                            <Textarea
+                              placeholder="Write an encouraging, specific note for the student..."
+                              value={teacherFeedback}
+                              onChange={(e) => setTeacherFeedback(e.target.value)}
+                              className="min-h-[6rem]"
+                            />
+                          </div>
+                          <div className="mt-3 flex justify-end">
+                            <Button
+                              onClick={async () => {
+                                setIsPublishing(true);
+                                await new Promise((r) => setTimeout(r, 1000));
+                                setIsPublishing(false);
+                              }}
+                              disabled={isPublishing}
+                            >
+                              {isPublishing ? "Updating…" : "Update"}
+                            </Button>
                           </div>
                         </div>
                       </div>
