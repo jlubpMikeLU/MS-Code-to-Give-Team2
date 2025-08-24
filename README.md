@@ -15,8 +15,9 @@ python webApp.py
 ```
 
 3. If any problems met, change according to the picture:
-[图片]
-[图片]
+<img width="1280" height="505" alt="image" src="https://github.com/user-attachments/assets/9c6c7336-7f06-4795-bee6-2645383d4de7" />
+<img width="1280" height="518" alt="image" src="https://github.com/user-attachments/assets/75b72a1a-f50c-40aa-9d32-6735af1fd672" />
+
 ```
 csv_path = str(files("panphon").joinpath(fn))
 df = pd.read_csv(csv_path, encoding='utf-8')
